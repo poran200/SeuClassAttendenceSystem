@@ -60,7 +60,7 @@ public class DashBoardService {
             totalRegisterd+= log.getSection().getRegisterStudents().size();
         }
         if (totalAttend != 0){
-            return (totalAttend*100)/totalRegisterd;
+            return totalRegisterd / (totalAttend * 100);
         }else
             return 0;
     }
