@@ -43,10 +43,17 @@ public class DashBoardService {
                 int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                 summaryDto.setDurationTaken(totalDuration);
                 summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                double attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
-                if (attendencePercentage != 0){
-                    summaryDto.setAttendanceRate(attendencePercentage/logs.size());
+                int totalRegisterd = 0;
+                int totalAttend = 0;
+                for (ClassLog log : logs) {
+                    totalAttend +=log.getTotalAttend();
+                    totalRegisterd+= log.getSection().getRegisterStudents().size();
                 }
+                if (totalAttend != 0){
+                    double percentage = (totalAttend*100)/totalRegisterd;
+                    summaryDto.setAttendanceRate(percentage);
+                }
+
                 summaryDtoList.add(summaryDto);
             }
         }
