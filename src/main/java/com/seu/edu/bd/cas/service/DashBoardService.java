@@ -43,7 +43,7 @@ public class DashBoardService {
                 int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                 summaryDto.setDurationTaken(totalDuration);
                 summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                int attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
+                double attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
                 if (attendencePercentage != 0){
                     summaryDto.setAttendanceRate(attendencePercentage/logs.size());
                 }
@@ -59,8 +59,7 @@ public class DashBoardService {
     }
 
     public List<ClassLog> findByFaculty(String facultyInitial){
-        List<ClassLog> classLogs = classLogRepository.findAllBySection_Faculty_Initial(facultyInitial);
-        return classLogs;
+        return classLogRepository.findAllBySection_Faculty_Initial(facultyInitial);
     }
 
     public List<ClassLogSummaryDto> getClassLogSummaryForDateOrWeek(String faciallyInitial, Date start ,Date end){
@@ -81,7 +80,7 @@ public class DashBoardService {
                    int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                    summaryDto.setDurationTaken(totalDuration);
                    summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                   int attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
+                   double attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
                    if (attendencePercentage != 0){
                        summaryDto.setAttendanceRate(attendencePercentage/logs.size());
                    }
