@@ -14,10 +14,10 @@
     <name>classattendencesystem</name>
     <description>Demo project for Spring Boot</description>
 
-    <properties>
-        <java.version>11</java.version>
-        <jdkVersion>11</jdkVersion>
-    </properties>
+<!--    <properties>-->
+<!--        <java.version>11</java.version>-->
+<!--        <jdkVersion>11</jdkVersion>-->
+<!--    </properties>-->
 
     <dependencies>
         <dependency>
