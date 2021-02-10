@@ -2,10 +2,7 @@ package com.seu.edu.bd.cas.service;
 
 import com.seu.edu.bd.cas.exeption.ResourceNotFoundExption;
 import com.seu.edu.bd.cas.exeption.SectionNOtFoundException;
-import com.seu.edu.bd.cas.model.Attendance;
-import com.seu.edu.bd.cas.model.ClassLog;
-import com.seu.edu.bd.cas.model.Registration;
-import com.seu.edu.bd.cas.model.Student;
+import com.seu.edu.bd.cas.model.*;
 import com.seu.edu.bd.cas.repository.AttendanceRepository;
 import com.seu.edu.bd.cas.repository.ClassLogRepository;
 import com.seu.edu.bd.cas.repository.SectionRepository;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,17 +24,17 @@ public class ClassLogService {
 
 
     public ClassLog save( String sectionId, List<Student> students) throws SectionNOtFoundException {
-        var saveLog = new ClassLog();
+        ClassLog saveLog = new ClassLog();
         saveLog.setTotalAttend(students.size());
-        var section = sectionRepository.findById(sectionId);
+        Optional<Section> section = sectionRepository.findById(sectionId);
         if (section.isPresent()){
             saveLog.setSection(section.get());
-            var studentSet = section.get().getRegisterStudents()
+           Set<Student>  studentSet = section.get().getRegisterStudents()
                     .stream()
                     .map(Registration::getStudent)
                      .collect(Collectors.toSet());
             for (Student s : studentSet) {
-                var studentOptional = students.stream()
+                Optional<Student> studentOptional = students.stream()
                         .filter(student -> s.getId() == student.getId())
                         .findFirst();
                 Attendance attendance;
@@ -55,11 +53,11 @@ public class ClassLogService {
     }
     public ClassLog update(long classLogId , int duration, Date conductedAt, String status) throws SectionNOtFoundException {
 
-        var optionalClassLog = classLogRepository.findById(classLogId);
+        Optional<ClassLog> optionalClassLog = classLogRepository.findById(classLogId);
 
         if (optionalClassLog.isPresent()){
 
-            var classLog = optionalClassLog.get();
+            ClassLog classLog = optionalClassLog.get();
             classLog.setStatus(status);
             classLog.setConductAt(conductedAt);
             classLog.setDuration(duration);
@@ -72,7 +70,7 @@ public class ClassLogService {
 
 
     public ClassLog findById(long id) throws ResourceNotFoundExption {
-        var byId = classLogRepository.findById(id);
+        Optional<ClassLog> byId = classLogRepository.findById(id);
         if (byId.isPresent()){
             return byId.get();
         }else {

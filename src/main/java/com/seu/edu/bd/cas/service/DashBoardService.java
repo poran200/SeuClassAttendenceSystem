@@ -3,6 +3,7 @@ package com.seu.edu.bd.cas.service;
 import com.seu.edu.bd.cas.dto.ClassLogSummaryDto;
 import com.seu.edu.bd.cas.dto.DashBoardInfo;
 import com.seu.edu.bd.cas.model.ClassLog;
+import com.seu.edu.bd.cas.model.Faculty;
 import com.seu.edu.bd.cas.model.Section;
 import com.seu.edu.bd.cas.model.Semester;
 import com.seu.edu.bd.cas.repository.*;
@@ -27,22 +28,22 @@ public class DashBoardService {
 
     public DashBoardInfo getClassLogSummary(String faciallyInitial){
         List<ClassLogSummaryDto> summaryDtoList = new ArrayList<>();
-        var dashBoardInfo = getDashboardsInfo(faciallyInitial);
-        var faculty = facultyRepository.findByInitial(faciallyInitial);
+        DashBoardInfo dashBoardInfo = getDashboardsInfo(faciallyInitial);
+        Optional<Faculty> faculty = facultyRepository.findByInitial(faciallyInitial);
         if (faculty.isPresent()){
-            var sectionIdSList = faculty.get().getSections();
+            Set<Section> sectionIdSList = faculty.get().getSections();
 
             for ( Section section: sectionIdSList) {
-                var summaryDto = new ClassLogSummaryDto();
+                ClassLogSummaryDto summaryDto = new ClassLogSummaryDto();
                 summaryDto.setSectionId(section.getSectionId());
                 summaryDto.setScheduled(section.getClassPerWeek());
                 summaryDto.setLogged(countLooged(section));
                 summaryDto.setCourseTitle(section.getCourse().getTitle());
-                var logs = classLogRepository.findAllBySection_SectionId(section.getSectionId());
-                var totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
+                List<ClassLog> logs = classLogRepository.findAllBySection_SectionId(section.getSectionId());
+                int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                 summaryDto.setDurationTaken(totalDuration);
                 summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                var attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
+                int attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
                 if (attendencePercentage != 0){
                     summaryDto.setAttendanceRate(attendencePercentage/logs.size());
                 }
@@ -58,29 +59,29 @@ public class DashBoardService {
     }
 
     public List<ClassLog> findByFaculty(String facultyInitial){
-        var classLogs = classLogRepository.findAllBySection_Faculty_Initial(facultyInitial);
+        List<ClassLog> classLogs = classLogRepository.findAllBySection_Faculty_Initial(facultyInitial);
         return classLogs;
     }
 
     public List<ClassLogSummaryDto> getClassLogSummaryForDateOrWeek(String faciallyInitial, Date start ,Date end){
         List<ClassLogSummaryDto> summaryDtoList = new ArrayList<>();
-        var faculty = facultyRepository.findByInitial(faciallyInitial);
+        Optional<Faculty> faculty = facultyRepository.findByInitial(faciallyInitial);
         if (faculty.isPresent()){
-            var sectionIdSList = faculty.get().getSections();
+            Set<Section> sectionIdSList = faculty.get().getSections();
 
             for ( Section section: sectionIdSList) {
-                var logs = classLogRepository.findAllBySection_SectionIdAndConductAtBetween(section.getSectionId(),start,end);
+                List<ClassLog> logs = classLogRepository.findAllBySection_SectionIdAndConductAtBetween(section.getSectionId(),start,end);
                log.error("class log : "+ logs);
                if (!logs.isEmpty()){
-                   var summaryDto = new ClassLogSummaryDto();
+                   ClassLogSummaryDto summaryDto = new ClassLogSummaryDto();
                    summaryDto.setSectionId(section.getSectionId());
                    summaryDto.setScheduled(section.getClassPerWeek());
                    summaryDto.setLogged(logs.size());
                    summaryDto.setCourseTitle(section.getCourse().getTitle());
-                   var totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
+                   int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                    summaryDto.setDurationTaken(totalDuration);
                    summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                   var attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
+                   int attendencePercentage = logs.stream().mapToInt(value -> 100 * (value.getTotalAttend() / value.getSection().getRegisterStudents().size())).sum();
                    if (attendencePercentage != 0){
                        summaryDto.setAttendanceRate(attendencePercentage/logs.size());
                    }
@@ -92,22 +93,22 @@ public class DashBoardService {
         return summaryDtoList;
     }
     public DashBoardInfo getDashboardsInfo(String initial){
-        var dashBoardInfo = new DashBoardInfo();
-        var faculty = facultyRepository.findByInitial(initial);
+        DashBoardInfo dashBoardInfo = new DashBoardInfo();
+        Optional<Faculty> faculty = facultyRepository.findByInitial(initial);
         if (faculty.isPresent()){
-            var sections = faculty.get().getSections();
+            Set<Section> sections = faculty.get().getSections();
             dashBoardInfo.setTotalSections(sections.size());
             AtomicInteger size = new AtomicInteger();
             sections.forEach(section -> size.set( size.get()+section.getRegisterStudents().size()));
             dashBoardInfo.setRegisterStudents(size.get());
-            var classLogged = classLogRepository.countClassLogBySection_Faculty_Initial(initial);
+            int classLogged = classLogRepository.countClassLogBySection_Faculty_Initial(initial);
             dashBoardInfo.setClassLogged(classLogged);
-            var semester = semesterRepository.findById(1);
+            Optional<Semester> semester = semesterRepository.findById(1);
             if (semester.isPresent()){
-                var dateUtilWeek = new DateUtilWeek(semester.get());
+                DateUtilWeek dateUtilWeek = new DateUtilWeek(semester.get());
                 System.out.println("dateUtilWeek = " + dateUtilWeek.geTotalWeek());
-                var totalWeek = dateUtilWeek.geTotalWeek();
-                var totalSchedule = sections.stream().mapToInt(sec -> sec.getClassPerWeek() * totalWeek).sum();
+                int totalWeek = dateUtilWeek.geTotalWeek();
+                int totalSchedule = sections.stream().mapToInt(sec -> sec.getClassPerWeek() * totalWeek).sum();
                 dashBoardInfo.setScheduled(totalSchedule);
             }
         }

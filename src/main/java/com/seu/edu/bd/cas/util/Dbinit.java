@@ -32,15 +32,18 @@ public class Dbinit {
    @PostConstruct
    public void postConstruct(){
       Calendar calendar = new GregorianCalendar();
-      var start = LocalDate.of(2020, Month.JANUARY, 1);
-      var end = LocalDate.of(2020, Month.APRIL, 1);
+      LocalDate start = LocalDate.of(2020, Month.JANUARY, 1);
+      LocalDate end = LocalDate.of(2020, Month.APRIL, 1);
 
       Semester semester = new Semester(1,"Spring",start,end,start.getYear()+"");
 //      semesterRepository.save(semester);
       Student student1 = new Student("Poran Chowdury");
       Student student2 = new Student("Sha Jalal");
       Student student3 = new Student("Nazmul Hasan");
-      var studentList = List.of(student1, student2, student3);
+      List<Student> studentList = new ArrayList<>();
+      studentList.add(student1);
+      studentList.add(student2);
+      studentList.add(student3);
 //      studentRepository.saveAll(studentList);
 
       Course course1 = new Course("CSE2014","Data Structures",3);
@@ -48,7 +51,7 @@ public class Dbinit {
 //      courseRepository.save(course1);
 //      courseRepository.save(course2);
       Faculty faculty = new Faculty("KMH","Monirul Hasan","abc","teacher",null);
-      var encode = passwordEncoder.encode(faculty.getPassword());
+      String encode = passwordEncoder.encode(faculty.getPassword());
       faculty.setPassword(encode);
 //      facultyRepository.save(faculty);
       String sectionId = course1.getCourseCode()+"."+1+"."+semester.getId();

@@ -3,6 +3,7 @@ package com.seu.edu.bd.cas.controller;
 import com.seu.edu.bd.cas.dto.ClassLogDto;
 import com.seu.edu.bd.cas.exeption.ResourceNotFoundExption;
 import com.seu.edu.bd.cas.exeption.SectionNOtFoundException;
+import com.seu.edu.bd.cas.model.ClassLog;
 import com.seu.edu.bd.cas.model.Student;
 import com.seu.edu.bd.cas.service.ClassLogService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,12 @@ public class ClassLogController {
     private final ClassLogService classLogService;
     @PutMapping("/{classLogId}")
     public ResponseEntity<Object> saveClassLog(@RequestBody ClassLogDto logDto, @PathVariable long classLogId) throws SectionNOtFoundException {
-        var save = classLogService.update(classLogId, logDto.getDuration(), logDto.getConductAt(),logDto.getStatus());
+        ClassLog save = classLogService.update(classLogId, logDto.getDuration(), logDto.getConductAt(), logDto.getStatus());
         return ResponseEntity.ok().body(save);
     }
     @PostMapping("/{sectionId}")
     public ResponseEntity<Object> saveClassLogTemporary(@RequestBody List<Student> students, @PathVariable String sectionId) throws SectionNOtFoundException {
-        var save = classLogService.save(sectionId,students);
+        ClassLog save = classLogService.save(sectionId, students);
         return ResponseEntity.ok().body(save);
     }
     @GetMapping("/{id}")

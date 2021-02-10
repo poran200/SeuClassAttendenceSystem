@@ -5,6 +5,7 @@ import com.seu.edu.bd.cas.model.Semester;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,8 +23,10 @@ public final class DateUtilWeek {
     }
 
     public  Week getWeek(int nOfWeek){
-        var start = semester.getStartDate();
-        var end = semester.getEndDate();
+
+
+        LocalDate start = semester.getStartDate();
+        LocalDate end = semester.getEndDate();
         Date date = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date date1 = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Calendar c = Calendar.getInstance();
@@ -45,7 +48,7 @@ public final class DateUtilWeek {
         }
 
 //        System.out.println("weekMap = " + weekMap.toString());
-        var week = weekMap.get(nOfWeek);
+        Week week = weekMap.get(nOfWeek);
         log.info("week = " + week.toString());
         return  week;
     }
