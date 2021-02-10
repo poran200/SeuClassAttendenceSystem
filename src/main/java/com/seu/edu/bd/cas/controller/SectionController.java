@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @APiController
-@RequestMapping("api/v1/section")
+@RequestMapping("/api/v1/section")
 public class SectionController {
     @Autowired
     SectionRepository sectionRepository;
@@ -18,4 +18,9 @@ public class SectionController {
     public ResponseEntity<Object> finByFaculty(@PathVariable String initial){
         return ResponseEntity.ok().body(sectionRepository.findAllByFacultyInitial(initial));
     }
+    @GetMapping("/students/{section}")
+    public ResponseEntity<Object> getSectionStudents(@PathVariable String section){
+        return ResponseEntity.ok().body(sectionRepository.findById(section));
+    }
+
 }

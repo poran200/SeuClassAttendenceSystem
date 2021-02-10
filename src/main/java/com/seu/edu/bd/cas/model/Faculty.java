@@ -2,21 +2,21 @@ package com.seu.edu.bd.cas.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "initial")
 public class Faculty {
     @Id
     private String initial;
@@ -24,7 +24,7 @@ public class Faculty {
     @JsonIgnore
     private String password;
     private String role;
-    @OneToMany(mappedBy = "faculty")
-    @JsonIgnoreProperties(value = {"faculty"})
+    @OneToMany(mappedBy = "faculty" ,fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Section> sections;
 }

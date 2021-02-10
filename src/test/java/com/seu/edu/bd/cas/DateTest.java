@@ -1,5 +1,6 @@
 package com.seu.edu.bd.cas;
 
+import com.seu.edu.bd.cas.dto.Week;
 import com.seu.edu.bd.cas.model.Semester;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +10,7 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 class DateTest {
     @Test
@@ -41,20 +40,38 @@ class DateTest {
     void DatesWeek() throws ParseException {
         var start = LocalDate.of(2020, Month.JANUARY, 1);
         var end = LocalDate.of(2020, Month.JANUARY, 31);
-        Date date = new Date();
+        Date date = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date1 = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Calendar c = Calendar.getInstance();
-        c.set(start.getYear(),Calendar.JANUARY,start.getDayOfMonth());
-
+        c.setTime(date);
+        Calendar cEnd = Calendar.getInstance();
+        cEnd.setTime(date1);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - c.getFirstDayOfWeek();
         c.add(Calendar.DAY_OF_MONTH, -dayOfWeek);
 
-        Date weekStart = c.getTime();
-        // we do not need the same day a week after, that's why use 6, not 7
-        c.add(Calendar.DAY_OF_MONTH, 6);
-        Date weekEnd = c.getTime();
-        var wDate = weekStart.toInstant().toString().split("T");
-        System.out.println("weekStart = " +weekStart +"  weekEnd = " + weekEnd);
+//        Date weekStart = c.getTime();
+//        // we do not need the same day a week after, that's why use 6, not 7
+//        c.add(Calendar.DAY_OF_MONTH, 6);
+//        Date weekEnd = c.getTime();
+//        var wDate = weekStart.toInstant().toString().split("T");
+//        System.out.println("weekStart = " +weekStart +"  weekEnd = " + weekEnd);
 //      System.out.println("weekEnd = " + weekEnd);
+        Map<Integer, Week> weekMap = new HashMap<>();
+        int nOfWeek = 1;
+        while (c.before(cEnd)){
+            Date weekStart = c.getTime();
+            // we do not need the same day a week after, that's why use 6, not 7
+            c.add(Calendar.DAY_OF_MONTH, 6);
+            Date weekEnd = c.getTime();
+            weekMap.put(nOfWeek,new Week(weekStart,weekEnd));
+            var wDate = weekStart.toInstant().toString().split("T");
+            System.out.println("weekStart = " +weekStart +"  weekEnd = " + weekEnd);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            nOfWeek++;
+        }
+
+        System.out.println("weekMap = " + weekMap.toString());
+        System.out.println("total week  = " +weekMap.size() );
 
 
     }
