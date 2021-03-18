@@ -13,4 +13,5 @@ public class DashBoardInfo {
     private int classLogged;
     private int scheduled;
     private List<ClassLogSummaryDto> summary;
+    private List<LogChartItem> logChartItems;
 }

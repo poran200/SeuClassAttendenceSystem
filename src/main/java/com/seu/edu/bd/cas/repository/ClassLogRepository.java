@@ -13,4 +13,5 @@ public interface ClassLogRepository extends JpaRepository<ClassLog,Long> {
        Integer countClassLogBySection_Faculty_Initial(String section_faculty_initial);
        List<ClassLog>findAllBySection_SectionId(String section_sectionId);
        List<ClassLog>findAllBySection_SectionIdAndConductAtBetween(String section_sectionId, Date conductAt, Date conductAt2);
+
 }

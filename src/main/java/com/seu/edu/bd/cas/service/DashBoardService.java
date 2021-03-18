@@ -2,6 +2,7 @@ package com.seu.edu.bd.cas.service;
 
 import com.seu.edu.bd.cas.dto.ClassLogSummaryDto;
 import com.seu.edu.bd.cas.dto.DashBoardInfo;
+import com.seu.edu.bd.cas.dto.LogChartItem;
 import com.seu.edu.bd.cas.model.ClassLog;
 import com.seu.edu.bd.cas.model.Faculty;
 import com.seu.edu.bd.cas.model.Section;
@@ -43,7 +44,7 @@ public class DashBoardService {
                 int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                 summaryDto.setDurationTaken(totalDuration);
                 summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                summaryDto.setAttendanceRate(getPersentage(logs));
+                summaryDto.setAttendanceRate(getPercentage(logs));
 
                 summaryDtoList.add(summaryDto);
             }
@@ -52,15 +53,16 @@ public class DashBoardService {
         return dashBoardInfo;
     }
 
-    private double getPersentage( List<ClassLog> logs) {
-        int totalRegisterd = 0;
+    private double getPercentage(List<ClassLog> logs) {
+        int totalRegistered = 0;
         int totalAttend = 0;
         for (ClassLog log : logs) {
             totalAttend +=log.getTotalAttend();
-            totalRegisterd+= log.getSection().getRegisterStudents().size();
+            totalRegistered+= log.getSection().getRegisterStudents().size();
         }
         if (totalAttend != 0){
-            return totalRegisterd / (totalAttend * 100);
+            int percentage = totalAttend * 100 / totalRegistered;
+            return percentage;
         }else
             return 0;
     }
@@ -91,7 +93,7 @@ public class DashBoardService {
                    int totalDuration = logs.stream().mapToInt(ClassLog::getDuration).sum();
                    summaryDto.setDurationTaken(totalDuration);
                    summaryDto.setDurationToBeTaken(logs.size()*section.getDuration());
-                   summaryDto.setAttendanceRate(getPersentage(logs));
+                   summaryDto.setAttendanceRate(getPercentage(logs));
                    summaryDtoList.add(summaryDto);
                }
 
@@ -117,10 +119,22 @@ public class DashBoardService {
                 int totalWeek = dateUtilWeek.geTotalWeek();
                 int totalSchedule = sections.stream().mapToInt(sec -> sec.getClassPerWeek() * totalWeek).sum();
                 dashBoardInfo.setScheduled(totalSchedule);
+                dashBoardInfo.setLogChartItems(getDashboardChartData(sections,totalWeek));
             }
         }
         System.out.println(dashBoardInfo.toString());
+
         return dashBoardInfo;
+    }
+    public List<LogChartItem> getDashboardChartData(Set<Section> sections, int totalWeek){
+        List<LogChartItem> logChartItems = new ArrayList<>();
+        for (Section s : sections) {
+            int totalSchedule = s.getClassPerWeek() * totalWeek;
+            Integer countTotalLogged = countLooged(s);
+            String courseCode = s.getCourse().getCourseCode();
+            logChartItems.add(new LogChartItem(courseCode,totalSchedule,countTotalLogged));
+        }
+        return logChartItems;
     }
 
 }

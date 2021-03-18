@@ -24,7 +24,6 @@ public final class DateUtilWeek {
 
     public  Week getWeek(int nOfWeek){
 
-
         LocalDate start = semester.getStartDate();
         LocalDate end = semester.getEndDate();
         Date date = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());

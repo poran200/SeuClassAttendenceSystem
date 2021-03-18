@@ -13,6 +13,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = "sectionId")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Section implements Serializable {
     @Id
     private String sectionId;

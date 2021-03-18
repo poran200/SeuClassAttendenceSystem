@@ -12,7 +12,8 @@ import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor@Data@EqualsAndHashCode
+@NoArgsConstructor@Data
+@EqualsAndHashCode(of = "id")
 public class ClassLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class ClassLog {
     @Temporal(value = TemporalType.DATE)
     private  Date conductAt;
     private  String status;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany( mappedBy = "classLog",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Attendance> attendances;
     @ManyToOne
     private Section section;
@@ -38,12 +39,14 @@ public class ClassLog {
             if (this.attendances ==null){
                 this.attendances = new HashSet<>();
             }
-            attendances.add(attendance);
+             this.attendances.add(attendance);
+             attendance.setClassLog(this);
     }
     public void addAllAttendance(Set<Attendance> attendance){
         if (this.attendances ==null){
             this.attendances = new HashSet<>();
         }
+        attendances.forEach(attendance1 -> attendance1.setClassLog(this));
         attendances.addAll(attendance);
     }
     @PrePersist

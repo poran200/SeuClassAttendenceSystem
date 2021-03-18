@@ -33,17 +33,18 @@ public class ClassLogService {
                     .stream()
                     .map(Registration::getStudent)
                      .collect(Collectors.toSet());
+            classLogRepository.save(saveLog);
             for (Student s : studentSet) {
-                Optional<Student> studentOptional = students.stream()
-                        .filter(student -> s.getId() == student.getId())
-                        .findFirst();
-                Attendance attendance;
-                if (studentOptional.isPresent()){
-                    attendance = attendanceRepository.save(new Attendance(s, true));
+//                Optional<Student> studentOptional = students.stream()
+//                        .filter(student -> s.getId() == student.getId())
+//                        .findFirst();
+                if (students.contains(s)){
+                    attendanceRepository.save(new Attendance(s, true,saveLog));
                 }else {
-                    attendance = attendanceRepository.save(new Attendance(s, false));
+                   attendanceRepository.save(new Attendance(s, false,saveLog));
                 }
-                saveLog.addAttendance(attendance);
+//                attendance.setClassLog(saveLog);
+//                saveLog.addAttendance(attendance);
             }
             return classLogRepository.save(saveLog);
 
@@ -64,7 +65,6 @@ public class ClassLogService {
            return classLogRepository.save(classLog);
 
         }
-
         throw  new SectionNOtFoundException("class  log  not found Id: "+classLogId);
     }
 
