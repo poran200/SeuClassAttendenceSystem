@@ -9,6 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class Week {
+    private int weekNumber;
     private Date start;
     private Date end;
 }

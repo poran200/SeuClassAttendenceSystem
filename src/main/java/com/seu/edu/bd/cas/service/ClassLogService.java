@@ -77,4 +77,7 @@ public class ClassLogService {
          throw   new ResourceNotFoundExption("class log not found Id :"+ id);
         }
     }
+    public List<ClassLog> findClassLogByFaculty(String initial){
+       return classLogRepository.findAllBySection_Faculty_Initial(initial);
+    }
 }

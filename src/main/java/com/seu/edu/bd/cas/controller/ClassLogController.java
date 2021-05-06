@@ -31,5 +31,9 @@ public class ClassLogController {
     public ResponseEntity<Object> findById(@PathVariable(required = true) long id) throws ResourceNotFoundExption {
          return ResponseEntity.ok().body(classLogService.findById(id));
     }
+    @GetMapping("/{initial}/classlogs")
+    public ResponseEntity<Object> findAllLogByInitial(@PathVariable String initial){
+        return ResponseEntity.ok().body(classLogService.findClassLogByFaculty(initial));
+    }
 
 }
