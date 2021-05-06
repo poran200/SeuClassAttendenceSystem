@@ -1,5 +1,6 @@
 package com.seu.edu.bd.cas.controller;
 
+import com.seu.edu.bd.cas.anotation.APiController;
 import com.seu.edu.bd.cas.dto.ClassLogDto;
 import com.seu.edu.bd.cas.exeption.ResourceNotFoundExption;
 import com.seu.edu.bd.cas.exeption.SectionNOtFoundException;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@APiController
 @RequestMapping("api/v1/classlog")
 @RequiredArgsConstructor
 public class ClassLogController {

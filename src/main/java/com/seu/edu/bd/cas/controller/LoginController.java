@@ -1,5 +1,6 @@
 package com.seu.edu.bd.cas.controller;
 
+import com.seu.edu.bd.cas.anotation.APiController;
 import com.seu.edu.bd.cas.anotation.CurrentUser;
 import com.seu.edu.bd.cas.config.CUserDetails;
 import com.seu.edu.bd.cas.exeption.ResourceNotFoundExption;
@@ -8,9 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@APiController
 @RequestMapping("")
 @RequiredArgsConstructor
 public class LoginController {
