@@ -17,6 +17,8 @@ public class LoginController {
     private final FacultyRepository facultyRepository;
     @GetMapping("/")
     public ResponseEntity<Object> getLogin(@CurrentUser CUserDetails currentUser) throws ResourceNotFoundExption {
-          return ResponseEntity.ok().body(facultyRepository.findByInitial(currentUser.getUsername()).orElseThrow(ResourceNotFoundExption::new));
+          return ResponseEntity.ok()
+                  .body(facultyRepository.findByInitial(currentUser.getUsername())
+                          .orElseThrow(ResourceNotFoundExption::new));
     }
 }
